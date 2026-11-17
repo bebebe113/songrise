@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101218">
+<title>Songrise への招待</title>
+<meta property="og:title" content="Songrise への招待">
+<meta property="og:description" content="友達と、今聴いている曲を毎日のプレイリストにしよう。">
+<style>
+  /* アプリのカラートークン（MusicChat/Theme.swift と同じ） */
+  :root {
+    color-scheme: dark;
+    --bg: #101218;
+    --card: #1A1D26;
+    --border: #3A3F50;
+    --text: #F3F1EC;
+    --sub: #A3A8B8;
+    --accent: #FF8A4C;
+    --partner: #8FB8FF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* 上から差す朝日のような光 */
+  .glow {
+    position: fixed; inset: 0 0 auto 0; height: 420px; pointer-events: none;
+    background: radial-gradient(60% 70% at 50% 0%, rgba(255, 138, 76, 0.22), rgba(255, 138, 76, 0) 70%);
+  }
+  main {
+    position: relative;
+    max-width: 440px; margin: 0 auto;
+    padding: calc(56px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+  .logo { width: 96px; height: 96px; border-radius: 22px; display: block; margin: 0 auto 20px;
+    box-shadow: 0 0 0 1px var(--border), 0 12px 40px rgba(255, 138, 76, 0.18); }
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: 0.01em; margin: 0 0 8px; }
+  .lead { color: var(--sub); font-size: 15px; line-height: 1.7; margin: 0 0 28px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 18px 16px; margin: 0 0 24px;
+    display: flex; align-items: center; gap: 14px; text-align: left;
+  }
+  .avatar {
+    flex: none; width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(143, 184, 255, 0.16); color: var(--partner);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; text-transform: uppercase;
+  }
+  .card .label { color: var(--sub); font-size: 13px; margin: 0 0 2px; }
+  .card .handle { color: var(--partner); font-size: 18px; font-weight: 600; margin: 0; word-break: break-all; }
+  .btn {
+    display: block; width: 100%; padding: 16px; border-radius: 999px;
+    text-decoration: none; font-size: 17px; font-weight: 600; margin: 0 0 12px;
+    transition: opacity .15s;
+  }
+  .btn:active { opacity: .75; }
+  .primary { background: var(--accent); color: var(--bg); }
+  .secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); font-size: 15px; padding: 14px; }
+  .note { color: var(--sub); font-size: 13px; line-height: 1.7; margin: 20px 0 0; }
+  footer { margin-top: 40px; font-size: 12px; }
+  footer a { color: var(--sub); text-decoration: none; margin: 0 8px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<main>
+  <!-- アプリアイコン（日の出） -->
+  <svg class="logo" viewBox="0 0 1024 1024" role="img" aria-label="Songrise">
+    <rect width="1024" height="1024" fill="#101218"/>
+    <path d="M205 634 A307 307 0 0 1 819 634 Z" fill="#FF8A4C"/>
+    <g fill="none" stroke="#BE6C3F" stroke-width="16">
+      <path d="M284 634 A228 228 0 0 1 740 634"/>
+      <path d="M356 634 A156 156 0 0 1 668 634"/>
+      <path d="M428 634 A84 84 0 0 1 596 634"/>
+    </g>
+    <g stroke-linecap="round" stroke-width="32">
+      <line x1="200" y1="692" x2="824" y2="692" stroke="#F3F1EC"/>
+      <line x1="323" y1="774" x2="701" y2="774" stroke="#8FB8FF"/>
+      <line x1="425" y1="856" x2="599" y2="856" stroke="#51668E"/>
+    </g>
+  </svg>
+
+  <h1>Songrise</h1>
+  <p class="lead" id="lead">友達と、今聴いている曲を<br>毎日のプレイリストにしよう。</p>
+
+  <div class="card" id="who" hidden>
+    <div class="avatar" id="initial"></div>
+    <div>
+      <p class="label" id="whoLabel">あなたを招待しています</p>
+      <p class="handle" id="handle"></p>
+    </div>
+  </div>
+
+  <a class="btn primary" id="open" href="#" hidden>アプリで開いて友達になる</a>
+  <a class="btn secondary" id="store" href="https://apps.apple.com/jp/app/songrise/id6827166845">App Store でダウンロード</a>
+  <p class="note" id="note">アプリを入れたら、もう一度このページの<br>「アプリで開いて友達になる」を押してください。</p>
+
+  <footer>
+    <a href="../terms.html" id="terms">利用規約</a>
+    <a href="../privacy.html" id="privacy">プライバシーポリシー</a>
+  </footer>
+</main>
+<script>
+  // 招待した人のID（アプリの ID ルール：英小文字・数字・._ の4〜20文字）
+  var id = (new URLSearchParams(location.search).get("id") || "").toLowerCase();
+  var en = !/^ja\b/i.test(navigator.language || "");
+  function $(x) { return document.getElementById(x); }
+  if (en) {
+    document.documentElement.lang = "en";
+    document.title = "Invitation to Songrise";
+    $("lead").innerHTML = "Turn what you and your friends are listening to<br>into a daily playlist.";
+    $("whoLabel").textContent = "invited you to Songrise";
+    $("open").textContent = "Open in the app to add friend";
+    $("store").textContent = "Download on the App Store";
+    $("store").href = "https://apps.apple.com/app/songrise/id6827166845";
+    $("note").innerHTML = "After installing the app, come back to this page<br>and tap “Open in the app to add friend”.";
+    $("terms").textContent = "Terms of Use"; $("terms").href = "../en/terms.html";
+    $("privacy").textContent = "Privacy Policy"; $("privacy").href = "../en/privacy.html";
+  }
+  if (/^[a-z0-9._]{4,20}$/.test(id)) {
+    $("handle").textContent = "@" + id;
+    $("initial").textContent = (id.match(/[a-z0-9]/) || ["?"])[0];
+    $("who").hidden = false;
+    $("open").href = "musichat://invite/" + id;
+    $("open").hidden = false;
+    // アプリが入っていればそのまま開く（入っていなければ何も起きずこのページが残る）
+    setTimeout(function () { location.href = $("open").href; }, 300);
+  } else {
+    $("note").hidden = true;
+  }
+</script>
+</body>
+</html>
